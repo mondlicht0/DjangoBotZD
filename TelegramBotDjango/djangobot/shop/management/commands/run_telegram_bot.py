@@ -41,7 +41,7 @@ def get_text_messages(message):
     elif message.text == "/help":
         bot.send_message(message.from_user.id, "/add /videos")
     elif message.text == "/add":
-        bot.send_message("Введи название")
+        bot.send_message(message.from_user.id, "Введи название")
         bot.register_next_step_handler(message, title_handler)
     else:
         bot.send_message(message.from_user.id, "Я тебя не понимаю. Напиши /help.")
