@@ -3,20 +3,10 @@ from shop.models import Product, Video
 import telebot
 
 bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
-is_adding = False
-
-def is_add():
-    return is_adding
 
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.send_message(message.chat.id, "Привет, я бот который сохраняет в себе видео. Команды: /add и /videos")
-
-@bot.message_handler(commands=['products'])
-def products(message):
-    products = Product.objects.all()
-    for product in products:
-        bot.send_message(message.chat.id, f"Name: {product.name}, Price: {product.price}")
 
 @bot.message_handler(commands=['videos'])
 def videos(message):
@@ -34,7 +24,12 @@ def title_handler(message):
 def url_handler(message):
     global url
     url = message.text
-    bot.send_message("Урааааа")
+    bot.send_message(message.chat.id, "Урааааа")
+    new_video()
+
+def new_video():
+    video = Video(name=name, url=url)
+    video.save()
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
