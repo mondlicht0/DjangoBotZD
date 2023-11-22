@@ -3,6 +3,10 @@ from shop.models import Product, Video
 import telebot
 
 bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
+is_wait = false
+
+def is_waiting():
+    return is_wait
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -22,26 +26,23 @@ def videos(message):
 
 @bot.message_handler(commands=['add'])
 def add(message):
+    is_wait = True
     name = title_handler(message)
     url = url_handler(message)
 
     new_video = Video.objects.create(name=name, url=url)
 
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=is_waiting)
 def title_handler(message):
     bot.send_message(message.chat.id, f"Напишите название видео")
     title = message.text
-    return title
+    bot.send_message(message.chat.id, f"{title}")
 
-@bot.message_handler(func=lambda message: True)
+@bot.message_handler(func=is_waiting)
 def url_handler(message, video):
     bot.send_message(message.chat.id, f"Вставьте URL видео")
     url = message.text
     video.url = url
-
-@bot.message_handler(func=lambda message: True)
-def echo_all(message):
-    bot.reply_to(message, message.text)
 
 
 class Command(BaseCommand):
