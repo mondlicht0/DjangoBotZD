@@ -3,10 +3,10 @@ from shop.models import Product, Video
 import telebot
 
 bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
-is_wait = False
+is_adding = False
 
-def is_waiting():
-    return is_wait
+def is_add():
+    return is_adding
 
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -26,24 +26,28 @@ def videos(message):
 
 @bot.message_handler(commands=['add'])
 def add(message):
-    is_wait = True
-    name = title_handler(message)
-    url = url_handler(message)
+    bot.register_next_step_handler(message, title_handler)
 
     new_video = Video.objects.create(name=name, url=url)
 
-@bot.message_handler(func=is_waiting)
 def title_handler(message):
     bot.send_message(message.chat.id, f"Напишите название видео")
     title = message.text
-    bot.send_message(message.chat.id, f"{title}")
+    bot.register_next_step_handler(message, url_handler)
 
-@bot.message_handler(func=is_waiting)
 def url_handler(message, video):
     bot.send_message(message.chat.id, f"Вставьте URL видео")
     url = message.text
     video.url = url
 
+@bot.message_handler(content_types=['text'])
+def get_text_messages(message):
+    if message.text == "Привет":
+        bot.send_message(message.from_user.id, "Привет")
+    elif message.text == "/help":
+        bot.send_message(message.from_user.id, "/add /videos")
+    else:
+        bot.send_message(message.from_user.id, "Я тебя не понимаю. Напиши /help.")
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
