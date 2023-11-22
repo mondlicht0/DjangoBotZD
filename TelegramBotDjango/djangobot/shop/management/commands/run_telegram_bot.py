@@ -25,14 +25,16 @@ def videos(message):
         bot.send_message(message.chat.id, f"Название: {video.name}, URL: {video.url}")
 
 def title_handler(message):
+    global title
     title = message.text
-    
 
+    bot.send_message(message.chat.id, "Вставь URL")
     bot.register_next_step_handler(message, url_handler)
 
-def url_handler(message, video):
-    bot.send_message(message.chat.id, f"Вставьте URL видео")
+def url_handler(message):
+    global url
     url = message.text
+    bot.send_message("Урааааа")
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
