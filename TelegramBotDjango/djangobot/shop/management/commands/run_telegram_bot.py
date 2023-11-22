@@ -6,7 +6,7 @@ bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(message.chat.id, "Привет, я бот который сохраняет в себе видео. Команды: /add и /videos")
+    bot.send_message(message.chat.id, "Привет, я бот который сохраняет в себе видео. Команды: /add, /videos, /help, Привет")
 
 @bot.message_handler(commands=['videos'])
 def videos(message):
