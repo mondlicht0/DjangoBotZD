@@ -22,17 +22,16 @@ def videos(message):
 
 @bot.message_handler(commands=['add'])
 def add(message):
-    video = Video()
-    title_handler(message, video)
-    url_handler(message, video)
+    name = title_handler(message)
+    url = url_handler(message)
 
-    new_video = Product.objects.create(name=title, price=url)
+    new_video = Video.objects.create(name=name, url=url)
 
 @bot.message_handler(func=lambda message: True)
-def title_handler(message, video):
+def title_handler(message):
     bot.send_message(message.chat.id, f"Напишите название видео")
     title = message.text
-    video.name = title
+    return title
 
 @bot.message_handler(func=lambda message: True)
 def url_handler(message, video):
