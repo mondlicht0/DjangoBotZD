@@ -29,7 +29,7 @@ def title_handler(message):
 def url_handler(message):
     global url
     url = message.text
-    bot.send_message(message.chat.id, "Урааааа")
+    bot.send_message(message.chat.id, f"Вы сохранили видео с названием {name}, и ссылкой {url}")
     new_video = Video.objects.create(name=name, url=url)
 
 def new_video():
