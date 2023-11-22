@@ -3,7 +3,7 @@ from shop.models import Product, Video
 import telebot
 
 bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
-is_wait = false
+is_wait = False
 
 def is_waiting():
     return is_wait
