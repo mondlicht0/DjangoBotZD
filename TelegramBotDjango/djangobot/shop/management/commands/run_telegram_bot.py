@@ -1,54 +1,55 @@
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from django.core.management.base import BaseCommand
+from shop.models import Product, Video
+import telebot
 
-# Замените 'YOUR_BOT_TOKEN' на токен вашего бота
-updater = Updater(token='6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ', use_context=True)
+bot = telebot.TeleBot("6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ")
 
-# Словарь для хранения списка видео
-video_list = {}
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, "Привет, я бот который сохраняет в себе видео. Команды: /add и /videos")
 
-# Обработчик команды /start
-def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Привет! Я бот для сохранения видео. Используй команды /add и /videos.')
+@bot.message_handler(commands=['products'])
+def products(message):
+    products = Product.objects.all()
+    for product in products:
+        bot.send_message(message.chat.id, f"Name: {product.name}, Price: {product.price}")
 
-# Обработчик команды /add
-def add_video(update: Update, context: CallbackContext) -> None:
-    chat_id = update.message.chat_id
-    text = update.message.text.replace('/add', '').strip()
+@bot.message_handler(commands=['videos'])
+def videos(message):
+    videos = Video.objects.all()
+    for video in videos:
+        bot.send_message(message.chat.id, f"Название: {video.name}, URL: {video.url}")
 
-    if chat_id not in video_list:
-        video_list[chat_id] = []
+@bot.message_handler(commands=['add'])
+def add(message):
+    bot.send_message(message.chat.id, f"Напишите название видео")
 
-    if text:
-        video_list[chat_id].append(text)
-        update.message.reply_text(f'Видео добавлено: {text}')
-    else:
-        update.message.reply_text('Пожалуйста, укажите ссылку на видео после /add.')
+    title = title_handler()
 
-# Обработчик команды /videos
-def list_videos(update: Update, context: CallbackContext) -> None:
-    chat_id = update.message.chat_id
+    bot.send_message(message.chat.id, f"Вставьте URL видео")
 
-    if chat_id in video_list and video_list[chat_id]:
-        videos = "\n".join(video_list[chat_id])
-        update.message.reply_text(f'Ваши видео:\n{videos}')
-    else:
-        update.message.reply_text('У вас пока нет сохраненных видео.')
+    video.url = url_handler()
 
-# Обработчик текстовых сообщений (не команд)
-def echo(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Извините, я понимаю только команды /add и /videos.')
+    new_video = Product.objects.create(name=title, price=url)
 
-# Добавляем обработчики команд
-updater.dispatcher.add_handler(CommandHandler('start', start))
-updater.dispatcher.add_handler(CommandHandler('add', add_video))
-updater.dispatcher.add_handler(CommandHandler('videos', list_videos))
+@bot.message_handler(func=lambda message: True)
+def title_handler(message):
+    title = message.text
+    return title
 
-# Добавляем обработчик текстовых сообщений (не команд)
-updater.dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+@bot.message_handler(func=lambda message: True)
+def url_handler(message):
+    url = message.text
+    return url
 
-# Запускаем бота
-updater.start_polling()
+@bot.message_handler(func=lambda message: True)
+def echo_all(message):
+    bot.reply_to(message, message.text)
 
-# Останавливаем бота при нажатии Ctrl+C
-updater.idle()
+
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        print("Starting bot...")
+        bot.polling()
+        print("Bot stopped")
+
