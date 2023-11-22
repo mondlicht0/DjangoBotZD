@@ -24,12 +24,6 @@ def videos(message):
     for video in videos:
         bot.send_message(message.chat.id, f"Название: {video.name}, URL: {video.url}")
 
-@bot.message_handler(commands=['add'])
-def add(message):
-    bot.register_next_step_handler(message, title_handler)
-
-    new_video = Video.objects.create(name=name, url=url)
-
 def title_handler(message):
     bot.send_message(message.chat.id, f"Напишите название видео")
     title = message.text
@@ -46,6 +40,9 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "Привет")
     elif message.text == "/help":
         bot.send_message(message.from_user.id, "/add /videos")
+    elif message.text == "/add":
+        bot.send_message("Введи название")
+        bot.register_next_step_handler(message, title_handler)
     else:
         bot.send_message(message.from_user.id, "Я тебя не понимаю. Напиши /help.")
 
