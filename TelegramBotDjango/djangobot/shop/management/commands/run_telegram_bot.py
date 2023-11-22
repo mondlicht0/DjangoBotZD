@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 # Замените 'YOUR_BOT_TOKEN' на токен вашего бота
-updater = Updater(token='YOUR_BOT_TOKEN', use_context=True)
+updater = Updater(token='6948290779:AAGJgiMOwcr6qxp7Tod1YHnlb_S2DlZPbpQ', use_context=True)
 
 # Словарь для хранения списка видео
 video_list = {}
