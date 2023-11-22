@@ -24,11 +24,11 @@ def videos(message):
 def add(message):
     bot.send_message(message.chat.id, f"Напишите название видео")
 
-    title = title_handler()
+    title = message.text
 
     bot.send_message(message.chat.id, f"Вставьте URL видео")
 
-    video.url = url_handler()
+    video.url = message.text
 
     new_video = Product.objects.create(name=title, price=url)
 
