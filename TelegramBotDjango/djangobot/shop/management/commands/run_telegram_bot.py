@@ -30,7 +30,7 @@ def url_handler(message):
     global url
     url = message.text
     bot.send_message(message.chat.id, f"Ураааа")
-    new_video = Video.objects.create(name=name, url=url)
+    new_video = Video.objects.create(name=title, url=url)
 
 def new_video():
     video = Video(name=name, url=url)
