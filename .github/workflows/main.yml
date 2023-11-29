@@ -33,8 +33,8 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: 22
         script: |
-          cd ../TelegramBotDjango/djangobot
-          source ../venv/bin/activate
+          cd /root/TelegramBotDjango/djangobot
+          source /root/venv/bin/activate
           git pull
           python manage.py migrate
           python manage.py collectstatic --noinput
