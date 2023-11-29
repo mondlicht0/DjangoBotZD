@@ -17,12 +17,12 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        host: --IP адрес сервера--
+        host: 207.154.217.158
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: 22
         script: |
-          cd папка, в которой находится проект
+          cd ./TelegramBotDjango/djangobot
           source ./venv/bin/activate
           git pull
           python manage.py migrate
